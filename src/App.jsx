@@ -1,4 +1,4 @@
-const issues = [
+const initialIssues = [
   {
     id: 1,
     status: "New",
@@ -43,9 +43,13 @@ class IssueRow extends React.Component {
 }
 
 class IssueTable extends React.Component {
+  constructor() {
+    super();
+    this.state = { issues: initialIssues };
+  }
   render() {
     const rowStyle = { border: "1px solid silver", padding: 4 };
-    const issueRows = issues.map((issue) => (
+    const issueRows = this.state.issues.map((issue) => (
       <IssueRow rowStyle={rowStyle} issue={issue} />
     ));
     return (
