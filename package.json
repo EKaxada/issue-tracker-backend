@@ -6,11 +6,13 @@
     "author": "Enock Kasaadha <enocksdha@gmail.com>",
     "license": "MIT",
     "dependencies": {
-        "express": "^4.17.1"
+        "express": "^4.17.1",
+        "nodemon": "^2.0.7"
     },
     "scripts": {
-        "start": "node server/server.js",
-        "compile": "babel src --out-dir public"
+        "start": "nodemon server/server.js",
+        "compile": "babel src --out-dir public",
+        "watch": "babel src --out-dir public --watch --verbose"
     },
     "devDependencies": {
         "@babel/cli": "^7.13.16",
