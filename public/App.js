@@ -206,7 +206,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 // query field values filled in 
-                query = "mutation {\n      issueAdd(issue:{\n        title: \"".concat(issue.title, "\",\n        owner: \"").concat(issue.owner, "\",\n        due: \"").concat(issue.due.toISOString(), "\",\n      }){\n        id\n      }\n    }"); // execute a fetch with query
+                query = "mutation issueAdd($issue: IssueInputs!){\n      issueAdd(issue: $issue){\n        id\n      }\n    }"; // execute a fetch with query
 
                 _context2.next = 3;
                 return fetch('graphql', {
@@ -215,7 +215,10 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
                     'Content-Type': 'application/json'
                   },
                   body: JSON.stringify({
-                    query: query
+                    query: query,
+                    variables: {
+                      issue: issue
+                    }
                   }) //pass in query here
 
                 });
