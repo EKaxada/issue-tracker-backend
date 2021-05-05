@@ -1,3 +1,11 @@
+// regex for date patterns
+const dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d')
+// reviver function to change all strings to dates
+function jsonDateReviver(key,value){
+  if(dateRegex.test(value)) return new Date(value);
+  return value;
+}
+
 class IssueFilter extends React.Component {
   render() {
     return <div>This is a placeholder for the issue filter.</div>;
@@ -11,9 +19,9 @@ function IssueRow(props) {
       <td>{issue.id}</td>
       <td>{issue.status}</td>
       <td>{issue.owner}</td>
-      <td>{issue.created}</td>
+      <td>{issue.created.toDateString()}</td>
       <td>{issue.effort}</td>
-      <td>{issue.due}</td>
+      <td>{issue.due ? issue.due.toDateString():''}</td>
       <td>{issue.title}</td>
     </tr>
   );
@@ -99,7 +107,8 @@ class IssueList extends React.Component {
       body: JSON.stringify({ query }), // query string passed here
     });
 
-    const result = await response.json(); // wait for response from server
+    const body = await response.text() // wait for response from server
+    const result = JSON.parse(body, jsonDateReviver)
     this.setState({ issues: result.data.issueList }); // update state with list
   }
 
