@@ -150,10 +150,10 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
                 query = "query {\n      issueList {\n        id title status owner\n        created effort due\n      }\n    }"; // send query string
 
                 _context.next = 3;
-                return fetch('/graphql', {
-                  method: 'POST',
+                return fetch("/graphql", {
+                  method: "POST",
                   headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json"
                   },
                   body: JSON.stringify({
                     query: query

@@ -90,17 +90,17 @@ class IssueList extends React.Component {
         id title status owner
         created effort due
       }
-    }`
+    }`;
 
     // send query string
-    const response = await fetch('/graphql', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({query}) // query string passed here
-    })
+    const response = await fetch("/graphql", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query }), // query string passed here
+    });
 
     const result = await response.json(); // wait for response from server
-    this.setState({issues: result.data.issueList}) // update state with list
+    this.setState({ issues: result.data.issueList }); // update state with list
   }
 
   createIssue(issue) {

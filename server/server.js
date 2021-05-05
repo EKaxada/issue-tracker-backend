@@ -1,6 +1,7 @@
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express"); // import apollo server object
 const fs = require("fs");
+const { GraphQLScalarType } = require('graphql');
 
 // hard-coded database
 const issuesDB = [{
@@ -25,6 +26,16 @@ const issuesDB = [{
 
 let aboutMessage = "Issue Tracker API v1.0";
 
+// scalar type resolver
+const GraphQLDate = new GraphQLScalarType({
+    name: 'GraphQLDate',
+    description: 'A Date() type in graphQL as a scalar',
+    //convert date to string
+    serialize(value) {
+        return value.toISOString();
+    }
+})
+
 // handler functions to resolve queries with real values
 const resolvers = {
     Query: {
@@ -34,6 +45,7 @@ const resolvers = {
     Mutation: {
         setAboutMessage,
     },
+    GraphQLDate
 };
 
 function setAboutMessage(_, { message }) {
