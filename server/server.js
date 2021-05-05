@@ -1,17 +1,8 @@
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express"); // import apollo server object
+const fs = require('fs');
 
 let aboutMessage = "Issue Tracker API v1.0";
-
-// Schema definition using String literals
-const typeDefs = `
-    type Query {
-        about: String!
-    }
-    type Mutation {
-        setAboutMessage(message: String!): String
-    }
-`;
 
 // handler functions to resolve queries with real values
 const resolvers = {
@@ -29,7 +20,7 @@ function setAboutMessage(_, { message }) {
 
 // construction of apollo server with two properties and return a GraphQL server object
 const server = new ApolloServer({
-    typeDefs,
+    typeDefs: fs.readFileSync('./server/schema.graphql', 'utf-8'), // changes schema into string
     resolvers,
 });
 
@@ -38,7 +29,8 @@ const app = express();
 // serve the public folder to the home route '/'
 app.use("/", express.static("public"));
 
-server.applyMiddleware({ app, path: "/graphql" }); // install apollo_server as middleware in express
+// install apollo_server as middleware in express
+server.applyMiddleware({ app, path: "/graphql" });
 
 // start application
 app.listen(3000, () => {
