@@ -62,7 +62,7 @@ class IssueAdd extends React.Component {
     const issue = {
       owner: form.owner.value,
       title: form.title.value,
-      status: "New",
+      due: new Date(new Date().getTime() + 1000*60*60*24*10)
     };
     this.props.createIssue(issue);
     form.owner.value = "";
@@ -112,12 +112,27 @@ class IssueList extends React.Component {
     this.setState({ issues: result.data.issueList }); // update state with list
   }
 
-  createIssue(issue) {
-    issue.id = this.state.issues.length + 1;
-    issue.created = new Date();
-    const newIssueList = this.state.issues.slice();
-    newIssueList.push(issue);
-    this.setState({ issues: newIssueList });
+  async createIssue(issue) {
+    // query field values filled in 
+    const query = `mutation {
+      issueAdd(issue:{
+        title: "${issue.title}",
+        owner: "${issue.owner}",
+        due: "${issue.due.toISOString()}",
+      }){
+        id
+      }
+    }`
+
+    // execute a fetch with query
+    const response = await fetch('graphql', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({query}) //pass in query here
+    })
+
+    // refresh list of issues
+    this.loadData();
   }
 
   render() {
