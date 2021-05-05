@@ -2,6 +2,7 @@ const express = require("express");
 const { ApolloServer } = require("apollo-server-express"); // import apollo server object
 const fs = require("fs");
 const { GraphQLScalarType } = require('graphql');
+const { Kind } = require('graphql/language')
 
 // hard-coded database
 const issuesDB = [{
@@ -33,7 +34,16 @@ const GraphQLDate = new GraphQLScalarType({
     //convert date to string
     serialize(value) {
         return value.toISOString();
+    },
+
+    // convert strings to proper dates
+    parseLiteral(ast) {
+        return (ast.kind == Kind.STRING) ? new Date(ast.value) : undefined;
+    },
+    parseValue(value) {
+        return new Date(value);
     }
+
 })
 
 // handler functions to resolve queries with real values
@@ -44,6 +54,7 @@ const resolvers = {
     },
     Mutation: {
         setAboutMessage,
+        issueAdd,
     },
     GraphQLDate
 };
@@ -54,6 +65,17 @@ function setAboutMessage(_, { message }) {
 
 function issueList() {
     return issuesDB;
+}
+
+// issueAdd resolver to create new Issue in memory
+function issueAdd(_, { issue }) {
+    issue.created = new Date();
+    issue.id = issuesDB.length + 1;
+    // default issue status
+    if (issue.status == undefined) issue.status = 'New';
+    // append issue to global varialbe issuesDB
+    issuesDB.push(issue);
+    return issue;
 }
 
 // construction of apollo server with two properties and return a GraphQL server object
