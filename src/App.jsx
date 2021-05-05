@@ -1,24 +1,3 @@
-const initialIssues = [
-  {
-    id: 1,
-    status: "Open",
-    owner: "Ravan",
-    effort: 5,
-    created: new Date("2018-08-15"),
-    due: undefined,
-    title: "Error in console when clicking Add",
-  },
-  {
-    id: 2,
-    status: "Assigned",
-    owner: "Eddie",
-    effort: 14,
-    created: new Date("2018-08-16"),
-    due: new Date("2018-08-30"),
-    title: "Missing bottom border on panel",
-  },
-];
-
 class IssueFilter extends React.Component {
   render() {
     return <div>This is a placeholder for the issue filter.</div>;
@@ -32,9 +11,9 @@ function IssueRow(props) {
       <td>{issue.id}</td>
       <td>{issue.status}</td>
       <td>{issue.owner}</td>
-      <td>{issue.created.toDateString()}</td>
+      <td>{issue.created}</td>
       <td>{issue.effort}</td>
-      <td>{issue.due ? issue.due.toDateString() : ""}</td>
+      <td>{issue.due}</td>
       <td>{issue.title}</td>
     </tr>
   );
@@ -104,10 +83,24 @@ class IssueList extends React.Component {
     this.loadData();
   }
 
-  loadData() {
-    setTimeout(() => {
-      this.setState({ issues: initialIssues });
-    }, 500);
+  async loadData() {
+    // GraphQL query string
+    const query = `query {
+      issueList {
+        id title status owner
+        created effort due
+      }
+    }`
+
+    // send query string
+    const response = await fetch('/graphql', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({query}) // query string passed here
+    })
+
+    const result = await response.json(); // wait for response from server
+    this.setState({issues: result.data.issueList}) // update state with list
   }
 
   createIssue(issue) {
