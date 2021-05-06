@@ -1,5 +1,4 @@
-/* globals React */
-/* eslint "react/jsx-no-def": "off" */
+import React from 'react';
 
 import graphQLFetch from './graphQLFetch.js'
 import IssueTable from "./IssueTable.jsx"
