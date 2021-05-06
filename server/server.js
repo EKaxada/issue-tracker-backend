@@ -3,27 +3,11 @@ const { ApolloServer, UserInputError } = require("apollo-server-express"); // im
 const fs = require("fs");
 const { GraphQLScalarType } = require("graphql");
 const { Kind } = require("graphql/language");
+const { MongoClient } = require('mongodb')
 
-// hard-coded database
-const issuesDB = [{
-        id: 1,
-        status: "New",
-        owner: "Ravan",
-        effort: 5,
-        created: new Date("2019-01-15"),
-        due: undefined,
-        title: "Error in console when clicking Add",
-    },
-    {
-        id: 2,
-        status: "Assigned",
-        owner: "Eddie",
-        effort: 14,
-        created: new Date("2019-01-16"),
-        due: new Date("2019-02-01"),
-        title: "Missing bottom border on panel",
-    },
-];
+const url = 'mongodb://localhost/issuetracker'
+
+let db;
 
 let aboutMessage = "Issue Tracker API v1.0";
 
@@ -66,8 +50,17 @@ function setAboutMessage(_, { message }) {
     return (aboutMessage = message);
 }
 
-function issueList() {
-    return issuesDB;
+async function issueList() {
+    const issues = await db.collection('issues').find({}).toArray();
+    return issues;
+}
+
+// function to connect to DB
+async function connectToDb() {
+    const client = new MongoClient(url, { userNewUrlParser: true });
+    await client.connect();
+    console.log('Connected to MongoDB at', url)
+    db = client.db();
 }
 
 // issueAdd resolver to create new Issue in memory
@@ -102,7 +95,14 @@ app.use("/", express.static("public"));
 // install apollo_server as middleware in express
 server.applyMiddleware({ app, path: "/graphql" });
 
-// start application
-app.listen(3000, () => {
-    console.log("App started on port 3000");
-});
+// start application after connection to db
+(async function() {
+    try {
+        await connectToDb();
+        app.listen(3000, () => {
+            console.log("App started on port 3000");
+        });
+    } catch (error) {
+        console.log('ERROR:', error)
+    }
+})();
