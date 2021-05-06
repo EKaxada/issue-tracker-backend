@@ -4,8 +4,9 @@ const fs = require("fs");
 const { GraphQLScalarType } = require("graphql");
 const { Kind } = require("graphql/language");
 const { MongoClient } = require('mongodb')
+require('dotenv').config();
 
-const url = 'mongodb://localhost/issuetracker'
+const url = process.env.DB_URL || 'mongodb://localhost/issuetracker'
 
 let db;
 
@@ -102,11 +103,13 @@ const app = express();
 server.applyMiddleware({ app, path: "/graphql" });
 
 // start application after connection to db
+const port = process.env.API_SERVER_PORT || 3000;
+
 (async function() {
     try {
         await connectToDb();
-        app.listen(3000, () => {
-            console.log("API Server started on port 3000");
+        app.listen(port, () => {
+            console.log(`API Server started on port ${port}`);
         });
     } catch (error) {
         console.log('ERROR:', error)
