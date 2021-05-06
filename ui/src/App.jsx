@@ -8,3 +8,7 @@ const element = <IssueList />;
 
 // Render the element in the contents div
 ReactDOM.render(element, document.getElementById("contents"));
+
+if (module.hot){
+  module.hot.accept();
+}
