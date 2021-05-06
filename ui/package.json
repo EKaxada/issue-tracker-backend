@@ -11,7 +11,7 @@
         "nodemon": "^2.0.7"
     },
     "scripts": {
-        "start": "nodemon -w uiserver.js uiserver.js",
+        "start": "nodemon -w uiserver.js -w .env uiserver.js",
         "compile": "babel src --out-dir public",
         "watch": "babel src --out-dir public --watch --verbose"
     },
