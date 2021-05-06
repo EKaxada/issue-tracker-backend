@@ -1,4 +1,6 @@
 const path = require("path");
+require('dotenv').config();
+const webpack = require('webpack')
 
 module.exports = {
     mode: "development",
@@ -20,5 +22,10 @@ module.exports = {
             chunks: "all",
         },
     },
-    devtool: 'source-map'
+    devtool: 'source-map',
+    plugins: [
+        new webpack.DefinePlugin({
+            __UI_API_ENDPOINT__: `'${process.env.UI_API_ENDPOINT}'`,
+        })
+    ]
 };

@@ -9,7 +9,7 @@ function jsonDateReviver(key, value) {
 // utility function to handle all API calls nad report errors
 export default async function graphQLFetch(query, variables = {}) {
     try {
-        const response = await fetch(window.ENV.UI_API_ENDPOINT, {
+        const response = await fetch(__UI_API_ENDPOINT__, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query, variables })
