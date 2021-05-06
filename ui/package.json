@@ -12,13 +12,16 @@
     },
     "scripts": {
         "start": "nodemon -w uiserver.js -w .env uiserver.js",
-        "compile": "babel src --out-dir public",
-        "watch": "babel src --out-dir public --watch --verbose"
+        "compile": "webpack --mode production",
+        "watch": "webpack --watch"
     },
     "devDependencies": {
         "@babel/cli": "^7.13.16",
         "@babel/core": "^7.13.16",
         "@babel/preset-env": "^7.13.15",
-        "@babel/preset-react": "^7.13.13"
+        "@babel/preset-react": "^7.13.13",
+        "babel-loader": "^8.2.2",
+        "webpack": "^5.36.2",
+        "webpack-cli": "^4.7.0"
     }
 }
