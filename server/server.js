@@ -63,8 +63,14 @@ async function connectToDb() {
     db = client.db();
 }
 
+// function for writing to DB
+async function getNextSequence(name) {
+    const result = await db.collection('counters').findOneAndUpdate({ _id: name }, { $inc: { current: 1 } }, { returnOriginal: false })
+    return result.value.current;
+}
+
 // issueAdd resolver to create new Issue in memory
-function issueAdd(_, { issue }) {
+async function issueAdd(_, { issue }) {
     const errors = [];
     if (issue.title.length < 3) {
         errors.push('Field "title" must be at least 3 characters long.');
@@ -76,9 +82,11 @@ function issueAdd(_, { issue }) {
         throw new UserInputError("Invalid input(s)", { errors });
     }
     issue.created = new Date();
-    issue.id = issuesDB.length + 1;
-    issuesDB.push(issue);
-    return issue;
+    issue.id = await getNextSequence('issues');
+    const result = await db.collection('issues').insertOne(issue);
+
+    const savedIssue = await db.collection('issues').findOne({ _id: result.insertedId });
+    return savedIssue;
 }
 
 // construction of apollo server with two properties and return a GraphQL server object
