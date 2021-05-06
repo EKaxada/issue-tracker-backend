@@ -91,14 +91,12 @@ async function issueAdd(_, { issue }) {
 
 // construction of apollo server with two properties and return a GraphQL server object
 const server = new ApolloServer({
-    typeDefs: fs.readFileSync("./server/schema.graphql", "utf-8"), // changes schema into string
+    typeDefs: fs.readFileSync("schema.graphql", "utf-8"), // changes schema into string
     resolvers,
 });
 
 const app = express();
 
-// serve the public folder to the home route '/'
-app.use("/", express.static("public"));
 
 // install apollo_server as middleware in express
 server.applyMiddleware({ app, path: "/graphql" });
@@ -108,7 +106,7 @@ server.applyMiddleware({ app, path: "/graphql" });
     try {
         await connectToDb();
         app.listen(3000, () => {
-            console.log("App started on port 3000");
+            console.log("API Server started on port 3000");
         });
     } catch (error) {
         console.log('ERROR:', error)
