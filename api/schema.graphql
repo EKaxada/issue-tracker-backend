@@ -33,7 +33,7 @@ _id: ID!
 
 type Query {
   about: String!
-  issueList: [Issue!]!
+  issueList(status: StatusType): [Issue!]!
 }
 
 type Mutation {
