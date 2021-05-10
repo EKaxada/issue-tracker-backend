@@ -11,6 +11,8 @@ function NavBar() {
       <NavLink to="/issues">Issue List</NavLink>
       {' | '}
       <NavLink to="/report">Report</NavLink>
+      {' | '}
+      <NavLink to="/about">About</NavLink>
     </nav>
   );
 }
