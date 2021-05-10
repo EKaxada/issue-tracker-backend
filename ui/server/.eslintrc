@@ -2,11 +2,8 @@
   "env": {
     "browser": true
   },
-  rules: {
-    "import/extensions": [ 'error', 'always',
-      { ignorePackages: true
-      }
-    ],
-    "react/prop-types": "off"
+  "rules": {
+    "no-console": "off",
+    "import/extensions": "off"
   }
 }
