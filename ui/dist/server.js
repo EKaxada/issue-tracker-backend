@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "f7ac3b7017dae5efca95";
+/******/ 	var hotCurrentHash = "f7bc1bc212cec0c351a9";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1055,6 +1055,9 @@ function template(body) {
 <body>
     <!-- We will add a React element inside this div. -->
     <div id="contents">${body}</div>
+    <script src="/env.js"></script>
+    <script src="/vendor.bundle.js"></script>
+    <script src="/app.bundle.js"></script>
 </body>
 
 </html>`;
