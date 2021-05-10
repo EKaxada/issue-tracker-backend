@@ -1,20 +1,20 @@
-import 'babel-polyfill'
-import 'whatwg-fetch'
-import React from 'react'
-import ReactDOM from 'react-dom'
-import {HashRouter as Router } from 'react-router-dom'
+import 'babel-polyfill';
+import 'whatwg-fetch';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-import Page from './Page.jsx'
+import Page from './Page.jsx';
 
 const element = (
   <Router>
-    <Page/>
+    <Page />
   </Router>
-)
+);
 
 // Render the element in the contents div
-ReactDOM.render(element, document.getElementById("contents"));
+ReactDOM.render(element, document.getElementById('contents'));
 
-if (module.hot){
+if (module.hot) {
   module.hot.accept();
 }

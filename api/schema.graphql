@@ -1,4 +1,3 @@
-### for scalar dates
 scalar GraphQLDate
 
 enum StatusType {
@@ -8,18 +7,8 @@ enum StatusType {
   Closed
 }
 
-"Toned down Issue, used as inputs, without server generated values"
-input IssueInputs {
-  title: String!
-  "Optional, if not supplied, will be set to 'New'"
-  status: StatusType = New
-  owner: String
-  effort: Int 
-  due: GraphQLDate
-}
-
 type Issue {
-_id: ID!
+  _id: ID!
   id: Int!
   title: String!
   status: StatusType!
@@ -27,13 +16,26 @@ _id: ID!
   effort: Int
   created: GraphQLDate!
   due: GraphQLDate
+  description: String
 }
 
-### top level declarations
+"Toned down Issue, used as inputs, without server generated values."
+input IssueInputs {
+  title: String!
+  "Optional, if not supplied, will be set to 'New'"
+  status: StatusType = New
+  owner: String
+  effort: Int
+  due: GraphQLDate
+  description: String
+}
+
+##### Top level declarations
 
 type Query {
   about: String!
   issueList(status: StatusType): [Issue!]!
+  issue(id: Int!): Issue!
 }
 
 type Mutation {

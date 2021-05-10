@@ -1,11 +1,12 @@
 import React from 'react';
-import URLSearchParams from 'url-search-params'; // to inteprete and parse the query strings in links 
+import URLSearchParams from 'url-search-params';
+import { Route } from 'react-router-dom';
 
-import graphQLFetch from './graphQLFetch.js'
-import IssueTable from "./IssueTable.jsx"
-import IssueFilter from './IssueFilter.jsx'
-import IssueAdd from './IssueAdd.jsx'
-
+import IssueFilter from './IssueFilter.jsx';
+import IssueTable from './IssueTable.jsx';
+import IssueAdd from './IssueAdd.jsx';
+import IssueDetail from './IssueDetail.jsx';
+import graphQLFetch from './graphQLFetch.js';
 
 export default class IssueList extends React.Component {
   constructor() {
@@ -18,24 +19,22 @@ export default class IssueList extends React.Component {
     this.loadData();
   }
 
-  // reload data incase of query changes
-  componentDidUpdate(prevProps){
-    const {location: {search: prevSearch}} = prevProps;
-    const {location: {search}} = this.props;
-    if(prevSearch!== search){
+  componentDidUpdate(prevProps) {
+    const { location: { search: prevSearch } } = prevProps;
+    const { location: { search } } = this.props;
+    if (prevSearch !== search) {
       this.loadData();
     }
   }
 
   async loadData() {
-    const {location: {search}} = this.props;
+    const { location: { search } } = this.props;
     const params = new URLSearchParams(search);
     const vars = {};
-    if(params.get('status')) vars.status = params.get('status'); // access issue status
+    if (params.get('status')) vars.status = params.get('status');
 
-    // GraphQL query string
-    const query = `query issueList($status: StatusType){
-      issueList (status: $status){
+    const query = `query issueList($status: StatusType) {
+      issueList (status: $status) {
         id title status owner
         created effort due
       }
@@ -43,33 +42,36 @@ export default class IssueList extends React.Component {
 
     const data = await graphQLFetch(query, vars);
     if (data) {
-      this.setState({issues: data.issueList})
+      this.setState({ issues: data.issueList });
     }
   }
 
   async createIssue(issue) {
-    // query field values filled in 
-    const query = `mutation issueAdd($issue: IssueInputs!){
-      issueAdd(issue: $issue){
+    const query = `mutation issueAdd($issue: IssueInputs!) {
+      issueAdd(issue: $issue) {
         id
       }
-    }`
+    }`;
 
-    const data = await graphQLFetch(query, {issue});
+    const data = await graphQLFetch(query, { issue });
     if (data) {
       this.loadData();
     }
   }
 
   render() {
+    const { issues } = this.state;
+    const { match } = this.props;
     return (
       <React.Fragment>
         <h1>Issue Tracker</h1>
         <IssueFilter />
         <hr />
-        <IssueTable issues={this.state.issues} />
+        <IssueTable issues={issues} />
         <hr />
         <IssueAdd createIssue={this.createIssue} />
+        <hr />
+        <Route path={`${match.path}/:id`} component={IssueDetail} />
       </React.Fragment>
     );
   }
