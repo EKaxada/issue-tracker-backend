@@ -1,6 +1,6 @@
 /* eslint "no-alert": "off" */
 
-const dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d');
+const dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
 
 function jsonDateReviver(key, value) {
   if (dateRegex.test(value)) return new Date(value);
@@ -8,11 +8,14 @@ function jsonDateReviver(key, value) {
 }
 
 export default async function graphQLFetch(query, vars) {
+  const apiEndPoint = __isBrowser__ // eslint-disable-line no-undef
+    ? window.ENV.UI_API_ENDPOINT
+    : process.env.UI_SERVER_API_ENDPOINT;
   const variables = vars || {};
   try {
-    const response = await fetch(window.ENV.UI_API_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch(window.apiEndPoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, variables }),
     });
     const body = await response.text();
@@ -20,8 +23,8 @@ export default async function graphQLFetch(query, vars) {
 
     if (result.errors) {
       const error = result.errors[0];
-      if (error.extensions.code === 'BAD_USER_INPUT') {
-        const details = error.extensions.exception.errors.join('\n ');
+      if (error.extensions.code === "BAD_USER_INPUT") {
+        const details = error.extensions.exception.errors.join("\n ");
         alert(`${error.message}:\n ${details}`);
       } else {
         alert(`${error.extensions.code}: ${error.message}`);

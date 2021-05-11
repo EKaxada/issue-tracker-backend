@@ -3,3 +3,4 @@ yarn.lock
 ui/public/*.js
 ui/public/*.map
 .env
+dist/
