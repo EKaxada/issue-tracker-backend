@@ -1,6 +1,7 @@
 node_modules
 package-lock.json
 *.lock
+*.log
 ui/public/*.js
 ui/public/*.map
 .env
